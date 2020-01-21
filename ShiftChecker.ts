@@ -3,7 +3,7 @@ interface IShift {
     end: string;
 }
 
-function filterShifts(newShift: IShift) : IShift[] {
+function filterShifts() : IShift[] {
     const usershifts = <IShift[]>[
         {
             start: '0600',
@@ -15,14 +15,49 @@ function filterShifts(newShift: IShift) : IShift[] {
         }
     ];
 
-    let filteredShifts: IShift[];
+    const globalShiftList = <IShift[]>[
+        {
+            start: '0000',
+            end: '2359'
+        },
+        {
+            start: '0600',
+            end: '1800'
+        },
+        {
+            start: '0000',
+            end: '1200'
+        },
+        {
+            start: '0600',
+            end: '1200'
+        },
+        {
+            start: '1800',
+            end: '2359'
+        },
+        {
+            start: '0000',
+            end: '0600'
+        },
+        {
+            start: '1200',
+            end: '2359'
+        },
+        {
+            start: '1200',
+            end: '1800'
+        }
+    ];
+
+    let filteredShifts: IShift[] = [];
     // if newShift starts before one of the usershift end
     //  if newShift starts after one of the usershift start
     //      then exclude
     for (let j = 0; j < globalShiftList.length; j++) {
         let isShiftValid = true;
         for (let i = 0; i < usershifts.length; i++) {
-            if(isTime1BeforeTime2(newShift.start, usershifts[i].end) && !isTime1BeforeTime2(newShift.start, usershifts[i].start))
+            if(isTime1BeforeTime2(globalShiftList[j].start, usershifts[i].end) && !isTime1BeforeTime2(globalShiftList[j].start, usershifts[i].start))
             {
                 isShiftValid = false;
                 break;
@@ -47,37 +82,4 @@ function isTime1BeforeTime2(time1: string, time2: string) : boolean {
     return false;
 }
 
-const globalShiftList = <IShift[]>[
-    {
-        start: '0000',
-        end: '2359'
-    },
-    {
-        start: '0600',
-        end: '1800'
-    },
-    {
-        start: '0000',
-        end: '1200'
-    },
-    {
-        start: '0600',
-        end: '1200'
-    },
-    {
-        start: '1800',
-        end: '2359'
-    },
-    {
-        start: '0000',
-        end: '0600'
-    },
-    {
-        start: '1200',
-        end: '2359'
-    },
-    {
-        start: '1200',
-        end: '1800'
-    }
-];
+console.log(filterShifts());
