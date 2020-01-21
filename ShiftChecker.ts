@@ -51,35 +51,28 @@ function filterShifts() : IShift[] {
     ];
 
     let filteredShifts: IShift[] = [];
-    // if newShift starts before one of the usershift end
-    //  if newShift starts after one of the usershift start
-    //      then exclude
     for (let j = 0; j < globalShiftList.length; j++) {
         let isShiftValid = true;
+        let globalShift = globalShiftList[j];
         for (let i = 0; i < usershifts.length; i++) {
-            if(isTime1BeforeTime2(globalShiftList[j].start, usershifts[i].end) && !isTime1BeforeTime2(globalShiftList[j].start, usershifts[i].start))
-            {
-                isShiftValid = false;
-                break;
-            }
+            let usershift = usershifts[i];
+            if (
+                globalShift.start <= usershift.start && globalShift.end <= usershift.start
+                || globalShift.start >= usershift.end
+                ) {
+                    continue;
+                } else {
+                    isShiftValid = false;
+                    break;
+                }
+
         }
-        if (isShiftValid) {
+        if (isShiftValid===true) {
             filteredShifts.push(globalShiftList[j]);
         }
     }
 
     return filteredShifts;
-}
-
-function isTime1BeforeTime2(time1: string, time2: string) : boolean {
-    let time1Number = parseInt(time1);
-    let time2Number = parseInt(time2);
-
-    if (time2Number - time1Number >= 0) {
-        return true;
-    }
-
-    return false;
 }
 
 console.log(filterShifts());
